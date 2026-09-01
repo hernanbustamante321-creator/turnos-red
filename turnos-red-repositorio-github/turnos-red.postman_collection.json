@@ -1,0 +1,412 @@
+{
+  "info": {
+    "_postman_id": "b6b1f7cc-9c2e-4c6a-a2e2-turnosred",
+    "name": "TurnosRed - Actividad 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "turnoId",
+      "value": "102"
+    },
+    {
+      "key": "medicoId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Turnos",
+      "item": [
+        {
+          "name": "GET Turnos - 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/turnos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Respuesta es un array', () => pm.expect(json).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Turnos - filtros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/turnos?especialidad=Pediatría&fecha=14/08/2026&medicoId=1"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Respuesta es array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Turno por ID - 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/turnos/{{turnoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json();",
+                  "pm.test('Tiene id', () => pm.expect(t).to.have.property('id'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST Turno - 201",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"paciente\":\"Ana Pérez\",\"documento\":\"40111222\",\"especialidad\":\"Nutrición\",\"fecha\":\"20/08/2026\",\"hora\":\"09:30\",\"confirmado\":false,\"medicoId\":1}"
+            },
+            "url": "{{baseUrl}}/turnos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const t = pm.response.json();",
+                  "pm.expect(t).to.have.property('id');",
+                  "pm.collectionVariables.set('turnoId', t.id);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST Turno inválido - 400",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"paciente\":\"A\",\"documento\":123,\"especialidad\":\"PEDIATRIA\",\"fecha\":\"2026-08-20\",\"hora\":\"99:99\",\"confirmado\":\"no\"}"
+            },
+            "url": "{{baseUrl}}/turnos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const e = pm.response.json();",
+                  "pm.expect(e).to.have.property('status', 400);",
+                  "pm.expect(e).to.have.property('code', 'VALIDATION_ERROR');",
+                  "pm.expect(e).to.have.property('details');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "PUT Turno - 200",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"confirmado\":true}"
+            },
+            "url": "{{baseUrl}}/turnos/{{turnoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "DELETE Turno - 204",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/turnos/{{turnoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Turno inexistente - 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/turnos/999999"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "const e = pm.response.json();",
+                  "pm.expect(e).to.have.property('code', 'NOT_FOUND');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Médicos",
+      "item": [
+        {
+          "name": "GET Médicos - 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/medicos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Médicos - filtros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/medicos?especialidad=Odontología&disponible=true"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Médico por ID - 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/medicos/{{medicoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.have.property('id');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST Médico - 201",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Valentina Torres\",\"especialidad\":\"Clínica médica\",\"disponible\":true}"
+            },
+            "url": "{{baseUrl}}/medicos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('medicoId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "POST Médico inválido - 400",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"X\",\"especialidad\":\"ODONTOLOGIA\",\"disponible\":\"si\"}"
+            },
+            "url": "{{baseUrl}}/medicos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const e = pm.response.json();",
+                  "pm.expect(e.code).to.eql('VALIDATION_ERROR');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "PUT Médico - 200",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"disponible\":false}"
+            },
+            "url": "{{baseUrl}}/medicos/{{medicoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "DELETE Médico - 204",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/medicos/{{medicoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "GET Médico inexistente - 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/medicos/999999"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "pm.expect(pm.response.json().code).to.eql('NOT_FOUND');"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 102,
+    "paciente": "Carlos Ruiz",
+    "documento": "36154210",
+    "especialidad": "Pediatría",
+    "fecha": "14/08/2026",
+    "hora": "10:00",
+    "confirmado": false,
+    "medicoId": 1
+  },
+  {
+    "id": 103,
+    "paciente": "María Gómez",
+    "documento": "28987456",
+    "especialidad": "Odontología",
+    "fecha": "15/08/2026",
+    "hora": "11:30",
+    "confirmado": true,
+    "medicoId": 2
+  }
+]

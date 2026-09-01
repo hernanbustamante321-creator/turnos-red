@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laura Fernández",
+    "especialidad": "Pediatría",
+    "disponible": true
+  },
+  {
+    "id": 2,
+    "nombre": "Diego Martínez",
+    "especialidad": "Odontología",
+    "disponible": true
+  },
+  {
+    "id": 3,
+    "nombre": "Sofía López",
+    "especialidad": "Clínica médica",
+    "disponible": false
+  }
+]
